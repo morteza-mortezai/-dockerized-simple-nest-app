@@ -7,8 +7,10 @@ services:
       - "3000:3000"
     depends_on:
       - mongodb
+      - rabbitmq
     environment:
       - MONGO_URI=mongodb://mongodb:27017/nestjs-app
+      - RABBITMQ_URL=amqp://rabbitmq:5672
     volumes:
       - .:/app
       - /app/node_modules
@@ -21,6 +23,16 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: nestjs-rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ messaging port
+      - "15672:15672" # RabbitMQ management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
 
 volumes:
   mongo_data:
